@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 3행   기본 namespace인 /schema/beans를 security로 변경  -->
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+        	
+       	<context:component-scan base-package="com.common.security.dao"/>
+
+        <!-- auto-config 속성은 자동 설정을 뜻하고, use-expressions 속성은 intercept-url에 SpEL문법의 사용유무를 선택한다 -->
+        <http auto-config="true" use-expressions="true">
+            <intercept-url pattern="/board/**" access="hasAnyRole('ROLE_USER','ROLE_MEMBER','ROLE_ADMIN')" />
+            <!-- <intercept-url pattern="/board/getBoardList" access="hasAnyRole('ROLE_USER','ROLE_MEMBER','ROLE_ADMIN')" /> -->
+            <intercept-url pattern="/reply/**" access="hasAnyRole('ROLE_MEMBER','ROLE_ADMIN')" />
+            <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+            <intercept-url pattern="/" access="permitAll" /> 
+       
+		 	<form-login
+			 	username-parameter="loginId"
+			 	password-parameter="loginPw"
+			 	login-processing-url="/login"
+			 	login-page="/secu/login"
+			 	default-target-url="/"
+		 	/>
+		 	
+		 	<!-- 403 접근권한이 없을때 이동시킬 Page -->
+	 	  	<access-denied-handler
+		    	error-page="/secu/access_denied_page"
+		    />
+		 </http>     
+        
+        <!-- <authentication-manager> 인증과 관련된 정보를 설정하는 tag
+            <authentication-provider> 인증에 대한 정보를 제공하는 제공자를 지정하는 tag
+                <user-service>
+                    <user name="user" password="userPw" authorities="ROLE_USER"/>
+                    <user name="guest" password="guest" authorities="ROLE_GUEST"/>
+                    <user name="admin" password="adminPw" authorities="ROLE_ADMIN"/>
+                    <user name="member" password="memberPw" authorities="ROLE_MEMBER"/>
+                </user-service>
+            </authentication-provider>
+        </authentication-manager> -->
+   		     
+        <!-- DB 연동 이후 -->
+        <authentication-manager> <!-- 인증과 관련된 정보를 설정하는 tag -->
+            <authentication-provider user-service-ref="userService"> <!-- 인증에 대한 정보를 제공하는 제공자를 지정하는 tag -->
+            </authentication-provider>
+        </authentication-manager>
+        
+         <beans:bean id="userService" class="com.common.security.service.CustomUserDetailsService"/>
+		
+		<!-- 
+			users-by-username-query 사용자를 인증하는 컬럼
+			authorities-by-username-query 사용자의 권한을 가져오는 컬럼		
+		 -->
+		<!-- <jdbc-user-service data-source-ref="dataSource" id="userService"
+			users-by-username-query="SELECT USER_ID as loginId, USER_PASSWORD as loginPw, ENABLED FROM MEMBER_USER WHERE USER_ID =?"
+			authorities-by-username-query="SELECT USER_ID as loginId, AUTHORITY FROM MEMBER_USER WHERE USER_ID=?"
+		/>   -->     
+		
+		
+</beans:beans>
+
+
+
+

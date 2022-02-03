@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<aop:aspectj-autoproxy />
+	<bean id="logAop" class="com.common.aop.LogAop"></bean>
+	
+	<!-- <bean id="logAop" class="com.board.aop.LogAop"/> -->
+	
+	<!-- <aop:config>
+		<aop:aspect id="logger" ref="logAop">
+			<aop:pointcut expression="within(com.board.**.*)" id="publicM"/>
+			<aop:around pointcut-ref="publicM" method="loggerAop"/>
+		</aop:aspect>
+	</aop:config> -->
+	
+	<bean id="myCat" class="com.common.aop.Cats">
+		<property name="name" value="호랑이"/>
+		<property name="age" value="4"/>
+		<property name="color" value="red"/>
+	</bean>
+	
+	
+		
+</beans>
+
+
+

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.board.mappers.boardsMapper">
+
+ <!-- 게시글 목록  -->
+<select id="goBoardList" resultType="com.board.model.BoardsVO" parameterType="hashMap">
+	SELECT * FROM MEMBER_BOARD 
+	<choose>
+		<when test="searchTypes.equals('title') and input != null ">
+			WHERE title LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('content')">
+			WHERE content LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('reg_id')">
+			WHERE reg_id LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('titleContent')">
+			WHERE title LIKE concat('%',#{input},'%')
+			or content LIKE concat('%',#{input},'%')
+		</when>
+	</choose>
+	
+	order by bno desc
+	limit #{displayPost}, #{postNum}
+</select>
+	
+	
+ <!-- 게시글 총 갯수  -->
+<select id="count" resultType="int" parameterType="hashMap">
+	SELECT count(bno) FROM MEMBER_BOARD 
+	
+	<choose>
+		<when test="searchTypes.equals('title') and input != null ">
+			WHERE title LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('content')">
+			WHERE content LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('reg_id')">
+			WHERE reg_id LIKE concat('%',#{input},'%')
+		</when>
+		
+		<when test="searchTypes.equals('titleContent')">
+			WHERE title LIKE concat('%',#{input},'%')
+			or content LIKE concat('%',#{input},'%')
+		</when>
+	</choose>
+	
+	
+</select>
+
+<!-- 게시글 등록  -->
+<insert id="insertBoards" parameterType="com.board.model.BoardsVO" >
+	
+	INSERT INTO MEMBER_BOARD ( title ,content , view_cnt , reg_id ,reg_dt ,edit_dt) 
+		VALUES (
+			#{title}, 
+			#{content}, 
+			0,
+			#{reg_id},
+			now(),
+			now()
+		)
+
+</insert>
+
+<insert id="insertBoardFail" parameterType="com.board.model.BoardsVO" >
+	
+	INSERT INTO MEMBER_BOARD ( title ,content , view_cnt , reg_id ,reg_dt ,edit_dt) 
+		VALUES (
+			#{title}, 
+			#{content}, 
+			0,
+			#{reg_id1},
+			now(),
+			now()
+		)
+
+</insert>
+
+
+
+
+ <!-- 게시글 목록  -->
+<select id="getView" resultType="com.board.model.BoardsVO">
+	SELECT * 
+	FROM MEMBER_BOARD
+	WHERE bno = #{bno} 
+</select>
+
+<!-- 조회수 -->
+<update id="updateViewCnt" parameterType="int">
+	UPDATE MEMBER_BOARD
+		SET 
+			view_cnt = view_cnt + 1
+	WHERE 
+		BNO = #{bno}
+</update>
+
+<!-- 게시글 수정폼 저장 -->
+<update id="insertModifyForm" parameterType="com.board.model.BoardsVO">
+	UPDATE MEMBER_BOARD
+		SET 
+			title = #{title},
+			content = #{content},
+			edit_dt= now()
+	WHERE 
+		bno = #{bno}
+</update>
+
+<!-- 게시글 삭제 -->
+<delete id="deleteBoard"  parameterType="int">
+	DELETE FROM MEMBER_BOARD
+		WHERE BNO = #{bno}
+</delete>
+
+
+
+
+
+
+</mapper>
