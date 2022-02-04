@@ -18,13 +18,24 @@
             <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
             <intercept-url pattern="/" access="permitAll" /> 
        
-		 	<form-login
+		 <!-- 	<form-login
 			 	username-parameter="loginId"
 			 	password-parameter="loginPw"
 			 	login-processing-url="/login"
 			 	login-page="/secu/login"
 			 	default-target-url="/"
+		 	/> -->
+		 	<form-login
+			 	username-parameter="loginId"
+			 	password-parameter="loginPw"
+			 	login-processing-url="/login"
+			 	authentication-success-handler-ref="userLoginSuccessHandler"
+			 	default-target-url="/"
 		 	/>
+		 	
+		 	<!-- 로그아웃 성공시 경로 -->
+		 	<logout logout-url="/logout" logout-success-url="/" />
+			<csrf disabled="true" />
 		 	
 		 	<!-- 403 접근권한이 없을때 이동시킬 Page -->
 	 	  	<access-denied-handler
@@ -48,6 +59,13 @@
             <authentication-provider user-service-ref="userService"> <!-- 인증에 대한 정보를 제공하는 제공자를 지정하는 tag -->
             </authentication-provider>
         </authentication-manager>
+        
+        
+       	<!-- 로그인 성공시 핸들러 -->
+		<beans:bean id="userLoginSuccessHandler" class="com.common.security.handler.ADMLoginSuccessHandler">
+			<beans:constructor-arg name="defaultTargetUrl"
+				value="/"></beans:constructor-arg>
+		</beans:bean>
         
          <beans:bean id="userService" class="com.common.security.service.CustomUserDetailsService"/>
 		

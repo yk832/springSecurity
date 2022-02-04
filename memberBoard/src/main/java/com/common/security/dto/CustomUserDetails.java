@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+@SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails{
 	
 	private String USER_ID;
@@ -82,6 +83,14 @@ public class CustomUserDetails implements UserDetails{
 		return ENABLED;
 	}
 
+
+	@Override
+	public String toString() {
+		return "CustomUserDetails [USER_ID=" + USER_ID + ", USER_PASSWORD=" + USER_PASSWORD + ", USER_NAME=" + USER_NAME
+				+ ", AUTHORITY=" + AUTHORITY + ", ENABLED=" + ENABLED + "]";
+	}
+	
+		
 
 	
 	
